@@ -104,7 +104,6 @@ def load_data():
 
     df = GreenProducts.rename(columns={'ExportValue': 'CZ Export 2023 CZK',
                                'export_Rank':'Žebříček exportu CZ 2023',
-                               'export_Percentile':'Percentil exportu CZ 2023',
                                'pci': 'Komplexita výrobku 2023',
                                'relatedness': 'Příbuznost CZ 2023',
                                'PCI_Rank':'Žebříček komplexity 2023',
@@ -155,7 +154,6 @@ plot_display_names = [
     'Koncentrace evropského exportu 2023',
     'Percentil příbuznosti CZ 2023',
     'Percentil komplexity 2023',
-    'Percentil exportu CZ 2023',
     'Žebříček exportu CZ 2023',
     'Žebříček příbuznosti CZ 2023',
     'Žebříček komplexity 2023',
@@ -190,7 +188,6 @@ hover_display_data = [
     'EU Největší Exportér 2023',
     'Komplexita výrobku 2023',
     'CZ Export 2023 CZK',
-    'Percentil exportu CZ 2023',
     'Žebříček exportu CZ 2023',
     'Světový export 2023 CZK',
     'EU Export 2023 CZK',
@@ -297,7 +294,6 @@ no_decimal = [
     'ubiquity',
     'Percentil příbuznosti CZ 2023',
     'Percentil komplexity 2023',
-    'Percentil exportu CZ 2023',
     'Žebříček exportu CZ 2023'
 ]
 
