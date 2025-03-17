@@ -14,7 +14,7 @@ st.error('Toto je pracovní verze. Data s vyjímkou budoucího růstu pochází 
 
 # Sidebar for selecting variables
 st.sidebar.header("Nastavení Grafu")
-year = st.sidebar.pills("Rok",["2022","2023"],default="2023")
+year = st.sidebar.pills("Rok",["2022","2023"],default="2022")
 st.title("Mapa Příležitostí "+year)
 
 USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=23.360)
@@ -260,7 +260,7 @@ for filter in st.session_state.filters:
         ]
 
 # Replace negative values in markersize column with zero
-filtered_df[markersize] = filtered_df[markersize].fillna(0).clip(lower=0)
+filtered_df[markersize] = filtered_df[markersize].clip(lower=0)
 
 # Remove NA values
 filtered_df = filtered_df.dropna(subset=[x_axis, y_axis, color, markersize])
