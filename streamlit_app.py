@@ -15,7 +15,7 @@ st.title("Mapa Příležitostí 2023")
 
 # Sidebar for selecting variables
 st.sidebar.header("Nastavení Grafu")
-
+st.sidebar.radio("Rok",["2022","2023"],index=1)
 USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=23.360)
 color_discrete_map = {
     'A02. Doprava': '#d6568c',
