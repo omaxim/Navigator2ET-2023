@@ -14,7 +14,8 @@ st.error('Toto je pracovní verze. Data s vyjímkou budoucího růstu pochází 
 
 # Sidebar for selecting variables
 st.sidebar.header("Nastavení Grafu")
-
+year = st.sidebar.pills("Rok",["2022","2023"],default="2022")
+st.title("Mapa Příležitostí "+year)
 USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=23.360)
 color_discrete_map = {
     'A02. Doprava': '#d6568c',
@@ -82,8 +83,6 @@ color_discrete_map = {
     'Osciloskopy': '#808080',
 }
 
-year = st.sidebar.pills("Rok",["2022","2023"],default="2022")
-st.title("Mapa Příležitostí "+year)
 # Load data
 @st.cache_data
 def load_data(datayear):
