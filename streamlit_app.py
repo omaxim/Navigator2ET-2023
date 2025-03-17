@@ -14,8 +14,8 @@ st.error('Toto je pracovní verze. Data s vyjímkou budoucího růstu pochází 
 
 # Sidebar for selecting variables
 st.sidebar.header("Nastavení Grafu")
-rok = st.sidebar.pills("Rok",["2022","2023"],default="2023")
-st.title("Mapa Příležitostí "+rok)
+year = st.sidebar.pills("Rok",["2022","2023"],default="2023")
+st.title("Mapa Příležitostí "+year)
 
 USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=23.360)
 color_discrete_map = {
@@ -92,7 +92,7 @@ def load_data():
     #df                          = pd.read_csv('GreenComplexity_CZE_2022.csv')
     url = 'https://docs.google.com/spreadsheets/d/1mhv7sJC5wSqJRXdfyFaWtBuEpX6ENj2c/gviz/tq?tqx=out:csv'
     taxonomy = pd.read_csv(url)
-    CZE = pd.read_csv('CZE_2023.csv')
+    CZE = pd.read_csv('CZE_'+year+'.csv')
     GreenProducts = taxonomy.merge(CZE,how='left',left_on='HS_ID',right_on='prod')
     # Calculate 2030 export value
     GreenProducts['CountryExport2030'] = GreenProducts['ExportValue'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** 8
@@ -103,23 +103,23 @@ def load_data():
     GreenProducts['CountryExport_25_30'] = sum(GreenProducts['ExportValue'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** i for i in range(3, 9))
     GreenProducts['EUExport_25_30'] = sum(GreenProducts['EUExport'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** i for i in range(3, 9))
 
-    df = GreenProducts.rename(columns={'ExportValue': 'CZ Export 2023 CZK',
-                               'export_Rank':'Žebříček exportu CZ 2023',
-                               'pci': 'Komplexita výrobku 2023',
-                               'relatedness': 'Příbuznost CZ 2023',
-                               'PCI_Rank':'Žebříček komplexity 2023',
-                               'PCI_Percentile':'Percentil komplexity 2023',
-                               'relatedness_Rank':'Žebříček příbuznosti CZ 2023',
-                               'relatedness_Percentile':'Percentil příbuznosti CZ 2023',
-                               'WorldExport':'Světový export 2023 CZK',
-                               'EUExport':'EU Export 2023 CZK',
-                               'EUWorldMarketShare':'EU Světový Podíl 2023 %',
-                               'euhhi':'Koncentrace evropského exportu 2023',
-                               'hhi':'Koncentrace světového trhu 2023',
-                               'CZE_WorldMarketShare':'CZ Světový Podíl 2023 %',
-                               'CZE_EUMarketShare':'CZ-EU Podíl 2023 %',
-                               'rca':'Výhoda CZ 2023',
-                               'EUTopExporter':'EU Největší Exportér 2023',
+    df = GreenProducts.rename(columns={'ExportValue': 'CZ Export '+year+' CZK',
+                               'export_Rank':'Žebříček exportu CZ '+year+'',
+                               'pci': 'Komplexita výrobku '+year+'',
+                               'relatedness': 'Příbuznost CZ '+year+'',
+                               'PCI_Rank':'Žebříček komplexity '+year+'',
+                               'PCI_Percentile':'Percentil komplexity '+year+'',
+                               'relatedness_Rank':'Žebříček příbuznosti CZ '+year+'',
+                               'relatedness_Percentile':'Percentil příbuznosti CZ '+year+'',
+                               'WorldExport':'Světový export '+year+' CZK',
+                               'EUExport':'EU Export '+year+' CZK',
+                               'EUWorldMarketShare':'EU Světový Podíl '+year+' %',
+                               'euhhi':'Koncentrace evropského exportu '+year+'',
+                               'hhi':'Koncentrace světového trhu '+year+'',
+                               'CZE_WorldMarketShare':'CZ Světový Podíl '+year+' %',
+                               'CZE_EUMarketShare':'CZ-EU Podíl '+year+' %',
+                               'rca':'Výhoda CZ '+year+'',
+                               'EUTopExporter':'EU Největší Exportér '+year+'',
                                'CZ_Nazev':'Název',
                                'CountryExport2030':'CZ 2030 Export CZK',
                                'EUExport2030':'EU 2030 Export CZK',
@@ -129,12 +129,12 @@ def load_data():
                                })
     df                          = df[df.Included == "IN"]
     df['stejna velikost']       = 0.02
-    df['CZ-EU Podíl 2023 %']      = 100 * df['CZ-EU Podíl 2023 %'] 
-    df['EU Světový Podíl 2023 %'] = 100 * df['EU Světový Podíl 2023 %'] 
-    df['CZ Světový Podíl 2023 %'] = 100 * df['CZ Světový Podíl 2023 %'] 
-    df['CZ Export 2023 CZK']        = USD_to_czk*df['CZ Export 2023 CZK'] 
-    df['Světový export 2023 CZK']      = USD_to_czk*df['Světový export 2023 CZK'] 
-    df['EU Export 2023 CZK']        = USD_to_czk*df['EU Export 2023 CZK'] 
+    df['CZ-EU Podíl '+year+' %']      = 100 * df['CZ-EU Podíl '+year+' %'] 
+    df['EU Světový Podíl '+year+' %'] = 100 * df['EU Světový Podíl '+year+' %'] 
+    df['CZ Světový Podíl '+year+' %'] = 100 * df['CZ Světový Podíl '+year+' %'] 
+    df['CZ Export '+year+' CZK']        = USD_to_czk*df['CZ Export '+year+' CZK'] 
+    df['Světový export '+year+' CZK']      = USD_to_czk*df['Světový export '+year+' CZK'] 
+    df['EU Export '+year+' CZK']        = USD_to_czk*df['EU Export '+year+' CZK'] 
     df['EU Celkový Export 25-30 CZK'] = USD_to_czk*df['EU Celkový Export 25-30 CZK'] 
     df['CZ Celkový Export 25-30 CZK'] = USD_to_czk*df['CZ Celkový Export 25-30 CZK'] 
     df['EU 2030 Export CZK']        = USD_to_czk*df['EU 2030 Export CZK'] 
@@ -149,22 +149,22 @@ df = load_data()
 # Create lists of display names for the sidebar
 ji_display_names = ['Skupina', 'Podskupina', 'Kategorie výrobku']
 plot_display_names = [
-    'Příbuznost CZ 2023',
-    'Výhoda CZ 2023',
-    'Koncentrace světového trhu 2023',
-    'Koncentrace evropského exportu 2023',
-    'Percentil příbuznosti CZ 2023',
-    'Percentil komplexity 2023',
-    'Žebříček exportu CZ 2023',
-    'Žebříček příbuznosti CZ 2023',
-    'Žebříček komplexity 2023',
-    'Komplexita výrobku 2023',
-    'CZ Export 2023 CZK',
-    'Světový export 2023 CZK',
-    'EU Export 2023 CZK',
-    'EU Světový Podíl 2023 %',
-    'CZ Světový Podíl 2023 %',
-    'CZ-EU Podíl 2023 %',
+    'Příbuznost CZ '+year+'',
+    'Výhoda CZ '+year+'',
+    'Koncentrace světového trhu '+year+'',
+    'Koncentrace evropského exportu '+year+'',
+    'Percentil příbuznosti CZ '+year+'',
+    'Percentil komplexity '+year+'',
+    'Žebříček exportu CZ '+year+'',
+    'Žebříček příbuznosti CZ '+year+'',
+    'Žebříček komplexity '+year+'',
+    'Komplexita výrobku '+year+'',
+    'CZ Export '+year+' CZK',
+    'Světový export '+year+' CZK',
+    'EU Export '+year+' CZK',
+    'EU Světový Podíl '+year+' %',
+    'CZ Světový Podíl '+year+' %',
+    'CZ-EU Podíl '+year+' %',
     'ubiquity',
     'density',
     'cog',
@@ -182,28 +182,28 @@ hover_display_data = [
     'Podskupina',
     'Název',
     'CZ Celkový Export 25-30 CZK',
-    'Příbuznost CZ 2023',
-    'Výhoda CZ 2023',
-    'Koncentrace světového trhu 2023',
-    'Koncentrace evropského exportu 2023',
-    'EU Největší Exportér 2023',
-    'Komplexita výrobku 2023',
-    'CZ Export 2023 CZK',
-    'Žebříček exportu CZ 2023',
-    'Světový export 2023 CZK',
-    'EU Export 2023 CZK',
-    'EU Světový Podíl 2023 %',
-    'CZ Světový Podíl 2023 %',
-    'CZ-EU Podíl 2023 %',
+    'Příbuznost CZ '+year+'',
+    'Výhoda CZ '+year+'',
+    'Koncentrace světového trhu '+year+'',
+    'Koncentrace evropského exportu '+year+'',
+    'EU Největší Exportér '+year+'',
+    'Komplexita výrobku '+year+'',
+    'CZ Export '+year+' CZK',
+    'Žebříček exportu CZ '+year+'',
+    'Světový export '+year+' CZK',
+    'EU Export '+year+' CZK',
+    'EU Světový Podíl '+year+' %',
+    'CZ Světový Podíl '+year+' %',
+    'CZ-EU Podíl '+year+' %',
     'CZ 2030 Export CZK',
     'CZ Celkový Export 25-30 CZK',
     'EU 2030 Export',
     'ubiquity',
     'EU Celkový Export 25-30 CZK',
-    'Percentil příbuznosti CZ 2023',
-    'Percentil komplexity 2023',
-    'Žebříček příbuznosti CZ 2023',
-    'Žebříček komplexity 2023',
+    'Percentil příbuznosti CZ '+year+'',
+    'Percentil komplexity '+year+'',
+    'Žebříček příbuznosti CZ '+year+'',
+    'Žebříček komplexity '+year+'',
 ]
 
 # Sidebar selection boxes using display names
@@ -283,43 +283,43 @@ hover_data = {}
 no_decimal = [
     'HS_ID',
     'CZ Celkový Export 25-30 CZK',
-    'CZ Export 2023 CZK',
-    'Světový export 2023 CZK',
-    'EU Export 2023 CZK',
+    'CZ Export '+year+' CZK',
+    'Světový export '+year+' CZK',
+    'EU Export '+year+' CZK',
     'CZ 2030 Export CZK',
     'CZ Celkový Export 25-30 CZK',
     'EU 2030 Export',
     'EU Celkový Export 25-30 CZK',
-    'Žebříček příbuznosti CZ 2023',
-    'Žebříček komplexity 2023',
+    'Žebříček příbuznosti CZ '+year+'',
+    'Žebříček komplexity '+year+'',
     'ubiquity',
-    'Percentil příbuznosti CZ 2023',
-    'Percentil komplexity 2023',
-    'Žebříček exportu CZ 2023'
+    'Percentil příbuznosti CZ '+year+'',
+    'Percentil komplexity '+year+'',
+    'Žebříček exportu CZ '+year+''
 ]
 
 # Columns requiring three significant figures and percentage formatting
 two_sigfig = [
-    'Příbuznost CZ 2023',
-    'Výhoda CZ 2023',
-    'Koncentrace světového trhu 2023',
-    'Koncentrace evropského exportu 2023',
-    'Komplexita výrobku 2023',
+    'Příbuznost CZ '+year+'',
+    'Výhoda CZ '+year+'',
+    'Koncentrace světového trhu '+year+'',
+    'Koncentrace evropského exportu '+year+'',
+    'Komplexita výrobku '+year+'',
     'CAGR 2022-2030 Předpověď',
 ]
 
 # Columns that should show as percentages
 percentage = [
-    'EU Světový Podíl 2023 %',
-    'CZ Světový Podíl 2023 %',
-    'CZ-EU Podíl 2023 %',
+    'EU Světový Podíl '+year+' %',
+    'CZ Světový Podíl '+year+' %',
+    'CZ-EU Podíl '+year+' %',
 ]
 
 texthover = [
     'Skupina',
     'Podskupina',
     'Název',
-    'EU Největší Exportér 2023'
+    'EU Největší Exportér '+year+''
 ]
 
 # Iterate over the columns in hover_info
@@ -391,13 +391,13 @@ fig.update_layout(
 st.plotly_chart(fig)
 col1, col2, col3 = st.columns(3)
 if HS_select == []:
-    col1.metric("Vybraný český export za rok 2023", "{:,.0f}".format(sum(filtered_df['CZ Export 2023 CZK'])/1000000000),'miliard CZK' )
+    col1.metric("Vybraný český export za rok "+year+"", "{:,.0f}".format(sum(filtered_df['CZ Export '+year+' CZK'])/1000000000),'miliard CZK' )
     col2.metric("Vybraný český export 2025 až 2030", "{:,.0f}".format(sum(filtered_df['CZ Celkový Export 25-30 CZK'])/1000000000), "miliard CZK")
     col3.metric("Vybraný evropský export 2025 až 2030", "{:,.0f}".format(sum(filtered_df['EU Celkový Export 25-30 CZK'])/1000000000), "miliard CZK")
     if debug:
         st.dataframe(filtered_df)
 else:
-    col1.metric("Vybraný český export za rok 2023", "{:,.0f}".format(sum(filtered_df[filtered_df['HS_Lookup'].isin(HS_select)]['CZ Export 2023 CZK'])/1000000),'milionů CZK' )
+    col1.metric("Vybraný český export za rok "+year+"", "{:,.0f}".format(sum(filtered_df[filtered_df['HS_Lookup'].isin(HS_select)]['CZ Export '+year+' CZK'])/1000000),'milionů CZK' )
     col2.metric("Vybraný český export 2025 až 2030", "{:,.0f}".format(sum(filtered_df[filtered_df['HS_Lookup'].isin(HS_select)]['CZ Celkový Export 25-30 CZK'])/1000000), "milionů CZK")
     col3.metric("Vybraný evropský export 2025 až 2030", "{:,.0f}".format(sum(filtered_df[filtered_df['HS_Lookup'].isin(HS_select)]['EU Celkový Export 25-30 CZK'])/1000000), "milionů CZK")
     if debug:
