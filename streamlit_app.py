@@ -92,6 +92,7 @@ def load_data(datayear):
     taxonomy = pd.read_csv(url)
     CZE = pd.read_csv('CZE_'+datayear+'.csv')
     GreenProducts = taxonomy.merge(CZE,how='left',left_on='HS_ID',right_on='prod')
+    st.text(GreenProducts.shape)
     # Calculate 2030 export value
     GreenProducts['CountryExport2030'] = GreenProducts['ExportValue'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** 8
     GreenProducts['EUExport2030'] = GreenProducts['EUExport'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** 8
@@ -139,7 +140,7 @@ def load_data(datayear):
     df['CZ 2030 Export CZK']        = USD_to_czk*df['CZ 2030 Export CZK'] 
     df['HS_ID']                 = df['HS_ID'].astype(str)
     df['HS_Lookup']              = df['HS_ID']+" - "+df['POPIS']
-
+    st.text(df.shape)
     return df
 
 df = load_data(year)
