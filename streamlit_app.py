@@ -14,8 +14,6 @@ st.error('Toto je pracovní verze. Data s vyjímkou budoucího růstu pochází 
 
 # Sidebar for selecting variables
 st.sidebar.header("Nastavení Grafu")
-year = st.sidebar.pills("Rok",["2022","2023"],default="2022")
-st.title("Mapa Příležitostí "+year)
 
 USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=23.360)
 color_discrete_map = {
@@ -84,42 +82,43 @@ color_discrete_map = {
     'Osciloskopy': '#808080',
 }
 
-
+year = st.sidebar.pills("Rok",["2022","2023"],default="2022")
+st.title("Mapa Příležitostí "+year)
 # Load data
 @st.cache_data
-def load_data():
+def load_data(datayear):
     # Replace with the path to your data file
     #df                          = pd.read_csv('GreenComplexity_CZE_2022.csv')
     url = 'https://docs.google.com/spreadsheets/d/1mhv7sJC5wSqJRXdfyFaWtBuEpX6ENj2c/gviz/tq?tqx=out:csv'
     taxonomy = pd.read_csv(url)
-    CZE = pd.read_csv('CZE_'+year+'.csv')
+    CZE = pd.read_csv('CZE_'+datayear+'.csv')
     GreenProducts = taxonomy.merge(CZE,how='left',left_on='HS_ID',right_on='prod')
     # Calculate 2030 export value
     GreenProducts['CountryExport2030'] = GreenProducts['ExportValue'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** 8
     GreenProducts['EUExport2030'] = GreenProducts['EUExport'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** 8
 
     # Calculate Total Export Value from 2025 to 2030
-    # We calculate for each year and sum up
+    # We calculate for each datayear and sum up
     GreenProducts['CountryExport_25_30'] = sum(GreenProducts['ExportValue'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** i for i in range(3, 9))
     GreenProducts['EUExport_25_30'] = sum(GreenProducts['EUExport'] * (1 + GreenProducts['CAGR_2022_30_FORECAST']) ** i for i in range(3, 9))
 
-    df = GreenProducts.rename(columns={'ExportValue': 'CZ Export '+year+' CZK',
-                               'export_Rank':'Žebříček exportu CZ '+year+'',
-                               'pci': 'Komplexita výrobku '+year+'',
-                               'relatedness': 'Příbuznost CZ '+year+'',
-                               'PCI_Rank':'Žebříček komplexity '+year+'',
-                               'PCI_Percentile':'Percentil komplexity '+year+'',
-                               'relatedness_Rank':'Žebříček příbuznosti CZ '+year+'',
-                               'relatedness_Percentile':'Percentil příbuznosti CZ '+year+'',
-                               'WorldExport':'Světový export '+year+' CZK',
-                               'EUExport':'EU Export '+year+' CZK',
-                               'EUWorldMarketShare':'EU Světový Podíl '+year+' %',
-                               'euhhi':'Koncentrace evropského exportu '+year+'',
-                               'hhi':'Koncentrace světového trhu '+year+'',
-                               'CZE_WorldMarketShare':'CZ Světový Podíl '+year+' %',
-                               'CZE_EUMarketShare':'CZ-EU Podíl '+year+' %',
-                               'rca':'Výhoda CZ '+year+'',
-                               'EUTopExporter':'EU Největší Exportér '+year+'',
+    df = GreenProducts.rename(columns={'ExportValue': 'CZ Export '+datayear+' CZK',
+                               'export_Rank':'Žebříček exportu CZ '+datayear+'',
+                               'pci': 'Komplexita výrobku '+datayear+'',
+                               'relatedness': 'Příbuznost CZ '+datayear+'',
+                               'PCI_Rank':'Žebříček komplexity '+datayear+'',
+                               'PCI_Percentile':'Percentil komplexity '+datayear+'',
+                               'relatedness_Rank':'Žebříček příbuznosti CZ '+datayear+'',
+                               'relatedness_Percentile':'Percentil příbuznosti CZ '+datayear+'',
+                               'WorldExport':'Světový export '+datayear+' CZK',
+                               'EUExport':'EU Export '+datayear+' CZK',
+                               'EUWorldMarketShare':'EU Světový Podíl '+datayear+' %',
+                               'euhhi':'Koncentrace evropského exportu '+datayear+'',
+                               'hhi':'Koncentrace světového trhu '+datayear+'',
+                               'CZE_WorldMarketShare':'CZ Světový Podíl '+datayear+' %',
+                               'CZE_EUMarketShare':'CZ-EU Podíl '+datayear+' %',
+                               'rca':'Výhoda CZ '+datayear+'',
+                               'EUTopExporter':'EU Největší Exportér '+datayear+'',
                                'CZ_Nazev':'Název',
                                'CountryExport2030':'CZ 2030 Export CZK',
                                'EUExport2030':'EU 2030 Export CZK',
@@ -129,12 +128,12 @@ def load_data():
                                })
     df                          = df[df.Included == "IN"]
     df['stejna velikost']       = 0.02
-    df['CZ-EU Podíl '+year+' %']      = 100 * df['CZ-EU Podíl '+year+' %'] 
-    df['EU Světový Podíl '+year+' %'] = 100 * df['EU Světový Podíl '+year+' %'] 
-    df['CZ Světový Podíl '+year+' %'] = 100 * df['CZ Světový Podíl '+year+' %'] 
-    df['CZ Export '+year+' CZK']        = USD_to_czk*df['CZ Export '+year+' CZK'] 
-    df['Světový export '+year+' CZK']      = USD_to_czk*df['Světový export '+year+' CZK'] 
-    df['EU Export '+year+' CZK']        = USD_to_czk*df['EU Export '+year+' CZK'] 
+    df['CZ-EU Podíl '+datayear+' %']      = 100 * df['CZ-EU Podíl '+datayear+' %'] 
+    df['EU Světový Podíl '+datayear+' %'] = 100 * df['EU Světový Podíl '+datayear+' %'] 
+    df['CZ Světový Podíl '+datayear+' %'] = 100 * df['CZ Světový Podíl '+datayear+' %'] 
+    df['CZ Export '+datayear+' CZK']        = USD_to_czk*df['CZ Export '+datayear+' CZK'] 
+    df['Světový export '+datayear+' CZK']      = USD_to_czk*df['Světový export '+datayear+' CZK'] 
+    df['EU Export '+datayear+' CZK']        = USD_to_czk*df['EU Export '+datayear+' CZK'] 
     df['EU Celkový Export 25-30 CZK'] = USD_to_czk*df['EU Celkový Export 25-30 CZK'] 
     df['CZ Celkový Export 25-30 CZK'] = USD_to_czk*df['CZ Celkový Export 25-30 CZK'] 
     df['EU 2030 Export CZK']        = USD_to_czk*df['EU 2030 Export CZK'] 
@@ -144,7 +143,7 @@ def load_data():
 
     return df
 
-df = load_data()
+df = load_data(year)
 
 # Create lists of display names for the sidebar
 ji_display_names = ['Skupina', 'Podskupina', 'Kategorie výrobku']
