@@ -15,7 +15,6 @@ st.error('Toto je pracovní verze. Data s vyjímkou budoucího růstu pochází 
 # Sidebar for selecting variables
 st.sidebar.header("Nastavení Grafu")
 year = st.sidebar.pills("Rok",["2022","2023"],default="2023")
-st.title("Mapa Příležitostí "+year)
 USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=23.360)
 color_discrete_map = {
     'A02. Doprava': '#d6568c',
@@ -140,10 +139,11 @@ def load_data(datayear):
     df['HS_ID']                 = df['HS_ID'].astype(str)
     df['HS_Lookup']              = df['HS_ID']+" - "+df['POPIS']
     
-    st.sidebar.info(str(GreenProducts.shape[0]) + " produktů načteno z excelu, z toho " +str(df.shape[0])+" je IN")
+    st.info(str(GreenProducts.shape[0]) + " produktů načteno z excelu, z toho " +str(df.shape[0])+" je IN")
     return df
 
 df = load_data(year)
+st.title("Mapa Příležitostí "+year)
 
 # Create lists of display names for the sidebar
 ji_display_names = ['Skupina', 'Podskupina', 'Kategorie výrobku']
