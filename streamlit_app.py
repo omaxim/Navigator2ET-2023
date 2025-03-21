@@ -15,7 +15,12 @@ st.error('Toto je pracovní verze. Data s vyjímkou budoucího růstu pochází 
 # Sidebar for selecting variables
 st.sidebar.header("Nastavení Grafu")
 year = st.sidebar.pills("Rok",["2022","2023"],default="2023")
-USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=23.360)
+def USDtoCZKdefault(year):
+    if year=="2022":
+        return 23.360
+    elif year=="2023":
+        return 22.21
+USD_to_czk = st.sidebar.number_input("Kurz USD vůči CZK",value=USDtoCZKdefault(year))
 color_discrete_map = {
     'A02. Doprava': '#d6568c',
     'A03. Budovy': '#274001',
@@ -84,7 +89,7 @@ color_discrete_map = {
 
 # Load data
 @st.cache_data
-def load_data(datayear):
+def load_data(datayear,USD_to_czk):
     # Replace with the path to your data file
     #df                          = pd.read_csv('GreenComplexity_CZE_2022.csv')
     url = 'https://docs.google.com/spreadsheets/d/1mhv7sJC5wSqJRXdfyFaWtBuEpX6ENj2c/gviz/tq?tqx=out:csv'
@@ -142,7 +147,7 @@ def load_data(datayear):
     st.info(str(GreenProducts.shape[0]) + " produktů načteno z excelu, z toho " +str(df.shape[0])+" je IN")
     return df
 
-df = load_data(year)
+df = load_data(year,USD_to_czk)
 st.title("Mapa Příležitostí "+year)
 
 # Create lists of display names for the sidebar
