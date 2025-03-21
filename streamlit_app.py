@@ -327,7 +327,8 @@ texthover = [
 ]
 
 # Iterate over the columns in hover_info
-for col in hover_info:
+hover_info_year = [text.replace(year_placeholder,year) for text in hover_info]
+for col in hover_info_year:
     # If the column is in no_decimal, format with no decimals and thousands separator
     if col in no_decimal:
         hover_data[col] = ':,.0f'  # No decimals, thousands separator
