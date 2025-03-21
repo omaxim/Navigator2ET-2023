@@ -147,23 +147,24 @@ st.title("Mapa Příležitostí "+year)
 
 # Create lists of display names for the sidebar
 ji_display_names = ['Skupina', 'Podskupina', 'Kategorie výrobku']
+year_placeholder = " ‎"
 plot_display_names = [
-    'Příbuznost CZ '+year+'',
-    'Výhoda CZ '+year+'',
-    'Koncentrace světového trhu '+year+'',
-    'Koncentrace evropského exportu '+year+'',
-    'Percentil příbuznosti CZ '+year+'',
-    'Percentil komplexity '+year+'',
-    'Žebříček exportu CZ '+year+'',
-    'Žebříček příbuznosti CZ '+year+'',
-    'Žebříček komplexity '+year+'',
-    'Komplexita výrobku '+year+'',
-    'CZ Export '+year+' CZK',
-    'Světový export '+year+' CZK',
-    'EU Export '+year+' CZK',
-    'EU Světový Podíl '+year+' %',
-    'CZ Světový Podíl '+year+' %',
-    'CZ-EU Podíl '+year+' %',
+    'Příbuznost CZ '+year_placeholder+'',
+    'Výhoda CZ '+year_placeholder+'',
+    'Koncentrace světového trhu '+year_placeholder+'',
+    'Koncentrace evropského exportu '+year_placeholder+'',
+    'Percentil příbuznosti CZ '+year_placeholder+'',
+    'Percentil komplexity '+year_placeholder+'',
+    'Žebříček exportu CZ '+year_placeholder+'',
+    'Žebříček příbuznosti CZ '+year_placeholder+'',
+    'Žebříček komplexity '+year_placeholder+'',
+    'Komplexita výrobku '+year_placeholder+'',
+    'CZ Export '+year_placeholder+' CZK',
+    'Světový export '+year_placeholder+' CZK',
+    'EU Export '+year_placeholder+' CZK',
+    'EU Světový Podíl '+year_placeholder+' %',
+    'CZ Světový Podíl '+year_placeholder+' %',
+    'CZ-EU Podíl '+year_placeholder+' %',
     'ubiquity',
     'density',
     'cog',
@@ -181,28 +182,28 @@ hover_display_data = [
     'Podskupina',
     'Název',
     'CZ Celkový Export 25-30 CZK',
-    'Příbuznost CZ '+year+'',
-    'Výhoda CZ '+year+'',
-    'Koncentrace světového trhu '+year+'',
-    'Koncentrace evropského exportu '+year+'',
-    'EU Největší Exportér '+year+'',
-    'Komplexita výrobku '+year+'',
-    'CZ Export '+year+' CZK',
-    'Žebříček exportu CZ '+year+'',
-    'Světový export '+year+' CZK',
-    'EU Export '+year+' CZK',
-    'EU Světový Podíl '+year+' %',
-    'CZ Světový Podíl '+year+' %',
-    'CZ-EU Podíl '+year+' %',
+    'Příbuznost CZ '+year_placeholder+'',
+    'Výhoda CZ '+year_placeholder+'',
+    'Koncentrace světového trhu '+year_placeholder+'',
+    'Koncentrace evropského exportu '+year_placeholder+'',
+    'EU Největší Exportér '+year_placeholder+'',
+    'Komplexita výrobku '+year_placeholder+'',
+    'CZ Export '+year_placeholder+' CZK',
+    'Žebříček exportu CZ '+year_placeholder+'',
+    'Světový export '+year_placeholder+' CZK',
+    'EU Export '+year_placeholder+' CZK',
+    'EU Světový Podíl '+year_placeholder+' %',
+    'CZ Světový Podíl '+year_placeholder+' %',
+    'CZ-EU Podíl '+year_placeholder+' %',
     'CZ 2030 Export CZK',
     'CZ Celkový Export 25-30 CZK',
     'EU 2030 Export',
     'ubiquity',
     'EU Celkový Export 25-30 CZK',
-    'Percentil příbuznosti CZ '+year+'',
-    'Percentil komplexity '+year+'',
-    'Žebříček příbuznosti CZ '+year+'',
-    'Žebříček komplexity '+year+'',
+    'Percentil příbuznosti CZ '+year_placeholder+'',
+    'Percentil komplexity '+year_placeholder+'',
+    'Žebříček příbuznosti CZ '+year_placeholder+'',
+    'Žebříček komplexity '+year_placeholder+'',
 ]
 
 # Sidebar selection boxes using display names
@@ -254,9 +255,13 @@ for i, filter in enumerate(st.session_state.filters):
 for filter in st.session_state.filters:
     if filter['column'] is not None and filter['range'] is not None:
         filtered_df = filtered_df[
-            (filtered_df[filter['column']] >= filter['range'][0]) &
-            (filtered_df[filter['column']] <= filter['range'][1])
+            (filtered_df[filter['column'].replace(year_placeholder,year)] >= filter['range'][0]) &
+            (filtered_df[filter['column'].replace(year_placeholder,year)] <= filter['range'][1])
         ]
+
+markersize = markersize.replace(year_placeholder,year)
+x_axis = x_axis.replace(year_placeholder,year)
+y_axis = y_axis.replace(year_placeholder,year)
 
 # Replace negative values in markersize column with zero
 filtered_df[markersize] = filtered_df[markersize].clip(lower=0)
