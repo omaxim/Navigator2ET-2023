@@ -447,7 +447,7 @@ max_size = filtered_df[markersize].max()
 if max_size == min_size:
     filtered_df["scaled_size"] = 5  # Default all to medium size
 else:
-    filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size)  * 95 + 5
+    filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size)  * 30 + 5
 
 
 fallback_colors = [
