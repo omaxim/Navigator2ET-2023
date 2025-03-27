@@ -431,20 +431,20 @@ st.download_button(
     mime="text/html"
 )
 
-# Ensure options are wrapped in a ChartOptions object
+# Define tooltip plugin separately
+tooltip_plugin = Plugin(
+    plugin_name="tooltip",
+    options={
+        "callbacks": {
+            "label": "function(context) { return 'X: ' + context.raw.x + ', Y: ' + context.raw.y + ', Size: ' + context.raw.r; }"
+        }
+    }
+)
+
+# Chart options (without plugins)
 chart_options = ChartOptions(
     responsive=True,
-    maintainAspectRatio=False,
-    plugins=[
-        Plugin(
-            plugin_name="tooltip",
-            options={
-                "callbacks": {
-                    "label": "function(context) { return 'X: ' + context.raw.x + ', Y: ' + context.raw.y + ', Size: ' + context.raw.r; }"
-                }
-            }
-        )
-    ]
+    maintainAspectRatio=False
 )
 
 dataset = Dataset(
@@ -465,7 +465,8 @@ chart = Chart(
     chart_type=ChartType.BUBBLE,
     datasets=[dataset],
     labels=[],  # Bubble charts don't need labels
-    options=chart_options  # Pass the correct object
+    options=chart_options,  # Pass chart options
+    plugins=[tooltip_plugin]  # Pass plugins separately
 )
 
 # Render the chart as HTML
