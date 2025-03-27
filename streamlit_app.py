@@ -435,18 +435,11 @@ bubble_data = [
 
 dataset = Dataset(
     label="Bubble Data",
-    data=bubble_data,
+    data={"x": [1,2,3], "y": [4,3,6], "r": [2,4,2]},
     backgroundColor="rgba(75, 192, 192, 0.2)",
     borderColor="rgba(75, 192, 192, 1)",
     borderWidth=1,
 )
-
-chart = Chart(
-    chart_type=ChartType.BUBBLE,
-    datasets=[dataset],
-    labels=list(filtered_df["Název"])
-)
-st.text(chart)
 
 bubble_chart_data = {
     "datasets": [dataset.to_dict()],
