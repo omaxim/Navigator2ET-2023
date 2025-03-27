@@ -444,4 +444,4 @@ if HS_select != []:
     bubble_chart_data = {"datasets": datasets}
 
 
-    st_chartjs(data=bubble_chart_data, chart_type="bubble", x_axis_title=x_axis,y_axis_title=y_axis,canvas_height=500, canvas_width=700)
+    st_chartjs(data=bubble_chart_data, chart_type="bubble", x_axis_title=x_axis,y_axis_title=y_axis,title="",canvas_height=500, canvas_width=700)
