@@ -473,6 +473,22 @@ data_json = json.dumps(
 background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
 border_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
 
+# Convert DataFrame to a JSON-compatible list
+data_json = json.dumps(
+    filtered_df.apply(
+        lambda row: {
+            "x": row[x_axis],
+            "y": row[y_axis],
+            "r": row[markersize],
+            "meta": {key: row[key] for key in hover_data}  # Store all hover info in meta
+        }, axis=1
+    ).tolist()
+)
+
+# Convert colors to JSON
+background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
+border_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
+
 # Generate the JavaScript chart code
 chart_js = f"""
 <div style="width:100%; height:400px;">
@@ -503,10 +519,10 @@ chart_js = f"""
                     callbacks: {{
                         label: function(context) {{
                             let data = context.dataset.data[context.dataIndex]; 
-                            if (!data.meta) return ''; // Safety check
-                            
-                            // Convert meta object to key-value pairs
-                            return Object.entries(data.meta).map(([key, value]) => `${{key}}: ${{value}}`).join('\\n');
+                            if (!data.meta) return []; // Return empty array if no meta data
+
+                            // Convert meta object to array of "Key: Value" strings (each in a new line)
+                            return Object.entries(data.meta).map(([key, value]) => `${{key}}: ${{value}}`);
                         }}
                     }}
                 }}
