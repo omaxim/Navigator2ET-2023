@@ -33,6 +33,7 @@ color_discrete_map = {
     'E01. Měřící a diagnostické přístroje; Monitoring': '#4d8584',
     'A01. Výroba, nízkoemisní výrobní postupy': '#a62f03',
     'B02. Cirkularita a odpady': '#400d01',
+    'D01c. Nové zdroje potravin': '#000000',
 
     'A02c. Cyklistika a jednostopá': '#808080',
     'A03a. Snižování energetické náročnosti budov': '#94FFB5',
