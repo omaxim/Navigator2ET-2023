@@ -435,7 +435,9 @@ bubble_data = [
 
 dataset = Dataset(
     label="Bubble Data",
-    data={"x": [1,2,3], "y": [4,3,6], "r": [2,4,2]},
+    data=       {{"x": 20, "y": 30, "r": 15},
+                {"x": 40, "y": 10, "r": 10},
+                {"x": 25, "y": 25, "r": 20}},
     backgroundColor="rgba(75, 192, 192, 0.2)",
     borderColor="rgba(75, 192, 192, 1)",
     borderWidth=1,
