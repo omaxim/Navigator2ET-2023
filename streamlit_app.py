@@ -447,39 +447,49 @@ dataset = Dataset(
     hoverBackgroundColor="rgba(255, 99, 132, 0.8)",  # Prevents flickering
 )
 
-# Custom tooltip plugin to show extra info
-tooltip_plugin = Plugin(
-    plugin_name="tooltip",
-    options={
-        "callbacks": {
-            "label": """
-                function(context) { 
-                    let data = context.raw; 
-                    return `X: ${data.x}, Y: ${data.y}, Size: ${data.r}, Info: ${data.meta}`;
+# Chart.js JavaScript code
+chart_js = """
+<div style="width:100%; height:400px;">
+    <canvas id="myBubbleChart"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('myBubbleChart').getContext('2d');
+    var myBubbleChart = new Chart(ctx, {
+        type: 'bubble',
+        data: {
+            datasets: [{
+                label: 'Sales Data',
+                data: [
+                    {x: 10, y: 20, r: 15, meta: 'Category A'},
+                    {x: 30, y: 40, r: 10, meta: 'Category B'},
+                    {x: 50, y: 25, r: 20, meta: 'Category C'},
+                    {x: 20, y: 35, r: 12, meta: 'Category D'},
+                    {x: 40, y: 50, r: 18, meta: 'Category E'}
+                ],
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(255, 99, 132, 0.8)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let data = context.raw;
+                            return 'X: ' + data.x + ', Y: ' + data.y + ', Size: ' + data.r + ', Info: ' + data.meta;
+                        }
+                    }
                 }
-            """
+            }
         }
-    }
-)
+    });
+</script>
+"""
 
-# Chart options (no plugins here)
-chart_options = ChartOptions(
-    responsive=True,
-    maintainAspectRatio=False
-)
-
-# Chart instance with plugins
-chart = Chart(
-    chart_type=ChartType.BUBBLE,
-    datasets=[dataset],
-    labels=[],  # Bubble charts don't need labels
-    options=chart_options,  
-    plugins=[tooltip_plugin]  # Add tooltip plugin
-)
-
-# Render chart in Streamlit
-chart_html = chart.render()
-components.html(f"""
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    {chart_html}
-""", height=400)
+# Render the chart in Streamlit using components.html()
+components.html(chart_js, height=400)
