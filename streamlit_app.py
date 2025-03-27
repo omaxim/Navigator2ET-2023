@@ -442,8 +442,7 @@ dataset = Dataset(
 )
 
 bubble_chart_data = {
-    "datasets": [dataset.to_dict()],
-    "labels": list(filtered_df["Název"])
+    "datasets": [dataset.to_dict()]
 }
 
 st_chartjs(
