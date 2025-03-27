@@ -448,7 +448,7 @@ bubble_chart_data = {
 }
 
 st_chartjs(
-    data=bubble_chart_data,
+    data=dataset.to_dict(),
     chart_type="bubble",
     title="Complex Bubble Chart",
     legend_position="bottom"
