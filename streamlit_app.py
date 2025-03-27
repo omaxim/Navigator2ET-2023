@@ -431,47 +431,55 @@ st.download_button(
     mime="text/html"
 )
 
-# Define tooltip plugin separately
+# Bubble dataset with extra info for tooltips
+dataset = Dataset(
+    label="Sales Data",
+    data=[
+        {"x": 10, "y": 20, "r": 15, "meta": "Category A"},
+        {"x": 30, "y": 40, "r": 10, "meta": "Category B"},
+        {"x": 50, "y": 25, "r": 20, "meta": "Category C"},
+        {"x": 20, "y": 35, "r": 12, "meta": "Category D"},
+        {"x": 40, "y": 50, "r": 18, "meta": "Category E"},
+    ],
+    backgroundColor="rgba(75, 192, 192, 0.5)",
+    borderColor="rgba(75, 192, 192, 1)",
+    borderWidth=1,
+    hoverBackgroundColor="rgba(255, 99, 132, 0.8)",  # Prevents flickering
+)
+
+# Custom tooltip plugin to show extra info
 tooltip_plugin = Plugin(
     plugin_name="tooltip",
     options={
         "callbacks": {
-            "label": "function(context) { return 'X: ' + context.raw.x + ', Y: ' + context.raw.y + ', Size: ' + context.raw.r; }"
+            "label": """
+                function(context) { 
+                    let data = context.raw; 
+                    return `X: ${data.x}, Y: ${data.y}, Size: ${data.r}, Info: ${data.meta}`;
+                }
+            """
         }
     }
 )
 
-# Chart options (without plugins)
+# Chart options (no plugins here)
 chart_options = ChartOptions(
     responsive=True,
     maintainAspectRatio=False
 )
 
-dataset = Dataset(
-    label="Sales Data",
-    data=[
-        {"x": 10, "y": 20, "r": 15},
-        {"x": 30, "y": 40, "r": 10},
-        {"x": 50, "y": 25, "r": 20},
-        {"x": 20, "y": 35, "r": 12},
-        {"x": 40, "y": 50, "r": 18},
-    ],
-    backgroundColor="rgba(75, 192, 192, 0.5)",
-    borderColor="rgba(75, 192, 192, 1)",
-    borderWidth=1,
-)
-
+# Chart instance with plugins
 chart = Chart(
     chart_type=ChartType.BUBBLE,
     datasets=[dataset],
     labels=[],  # Bubble charts don't need labels
-    options=chart_options,  # Pass chart options
-    plugins=[tooltip_plugin]  # Pass plugins separately
+    options=chart_options,  
+    plugins=[tooltip_plugin]  # Add tooltip plugin
 )
 
-# Render the chart as HTML
+# Render chart in Streamlit
 chart_html = chart.render()
 components.html(f"""
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {chart_html}
-""", height=600)
+""", height=400)
