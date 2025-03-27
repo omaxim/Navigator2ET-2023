@@ -441,14 +441,20 @@ dataset = Dataset(
     borderWidth=1,
 )
 
+chart = Chart(
+    chart_type=ChartType.BUBBLE,
+    datasets=[dataset],
+    labels=list(filtered_df["Název"])
+)
+st.text(chart)
 
 bubble_chart_data = {
     "datasets": [dataset.to_dict()],
     "labels": list(filtered_df["Název"])
 }
-st.text(dataset.to_dict())
+
 st_chartjs(
-    data=dataset.to_dict(),
+    data=bubble_chart_data,
     chart_type="bubble",
     title="Complex Bubble Chart",
     legend_position="bottom"
