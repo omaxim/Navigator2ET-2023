@@ -428,63 +428,15 @@ st.download_button(
     mime="text/html"
 )
 
+# Min-Max scaling for markersize (normalize to 0-100)
+min_size = filtered_df[markersize].min()
+max_size = filtered_df[markersize].max()
 
-# Convert DataFrame to a JSON-compatible list
-data_json = json.dumps(
-    filtered_df.apply(
-        lambda row: {
-            "x": row[x_axis],
-            "y": row[y_axis],
-            "r": row[markersize],
-            "meta": {key: row[key] for key in hover_data}  # Store additional hover info
-        }, axis=1
-    ).tolist()
-)
-
-# Convert colors to JSON
-background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
-border_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
-
-# Generate the JavaScript chart code
-# Convert DataFrame to a JSON-compatible list
-data_json = json.dumps(
-    filtered_df.apply(
-        lambda row: {
-            "x": row[x_axis],
-            "y": row[y_axis],
-            "r": row[markersize],
-            "meta": {key: row[key] for key in hover_data}  # Store additional hover info
-        }, axis=1
-    ).tolist()
-)
-
-# Convert DataFrame to a JSON-compatible list
-data_json = json.dumps(
-    filtered_df.apply(
-        lambda row: {
-            "x": row[x_axis],
-            "y": row[y_axis],
-            "r": row[markersize],
-            "meta": {key: row[key] for key in hover_data}  # Store all hover info in meta
-        }, axis=1
-    ).tolist()
-)
-
-# Convert colors to JSON
-background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
-border_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
-
-# Convert DataFrame to a JSON-compatible list
-data_json = json.dumps(
-    filtered_df.apply(
-        lambda row: {
-            "x": row[x_axis],
-            "y": row[y_axis],
-            "r": row[markersize],
-            "meta": {key: row[key] for key in hover_data}  # Store all hover info in meta
-        }, axis=1
-    ).tolist()
-)
+# Avoid division by zero in case all values are the same
+if max_size == min_size:
+    filtered_df["scaled_size"] = 50  # Default all to medium size
+else:
+    filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size) * 100
 
 # Group data by color category
 grouped_data = {}
@@ -493,8 +445,8 @@ for _, row in filtered_df.iterrows():
     data_point = {
         "x": row[x_axis],
         "y": row[y_axis],
-        "r": row[markersize],
-        "meta": {key: row[key] for key in hover_data}  # Store all hover info in meta
+        "r": row["scaled_size"],  # Use normalized size
+        "meta": {key: row[key] for key in hover_data}
     }
     
     if color_category not in grouped_data:
