@@ -491,7 +491,7 @@ chart_js = f"""
                     callbacks: {{
                         label: function(context) {{
                             let data = context.dataset.data[context.dataIndex]; // Correct way to access data
-                            let tooltipText = `X: $${{data.x}}, Y: $${{data.y}}, Size: $${{data.r}}`;
+                            let tooltipText = `X: $${{data.meta}}, Y: $${{data.y}}, Size: $${{data.r}}`;
 
                             // Ensure meta exists before accessing properties
                             if (data.meta) {{
