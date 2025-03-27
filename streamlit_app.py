@@ -427,19 +427,25 @@ st.download_button(
     file_name = "plot.html",
     mime="text/html"
 )
-if HS_select != []:
-    # Transform data into Chart.js format
-    datasets = []
-    for group, group_df in filtered_df[filtered_df['HS_Lookup'].isin(HS_select)].groupby(color):
-        dataset = {
-            "label": group,
-            "data": [
-                {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]} for _, row in group_df.iterrows()
-            ],
-            "backgroundColor": color_discrete_map.get(group)
-        }
-        datasets.append(dataset)
-    bubble_chart_data = {"datasets": datasets}
+
+# Transform data into Chart.js format
+datasets = []
+for group, group_df in filtered_df.groupby(color):
+    dataset = {
+        "label": group,
+        "data": [
+            {
+                "x": row[x_axis], 
+                "y": row[y_axis], 
+                "r": row[markersize],
+                "tooltip": {key: row[key] for key in hover_data}  # Include hover data
+            } for _, row in group_df.iterrows()
+        ],
+        "backgroundColor": color_discrete_map.get(group, "rgba(0, 0, 0, 0.6)")
+    }
+    datasets.append(dataset)
+
+bubble_chart_data = {"datasets": datasets}
 
 
-    st_chartjs(data=bubble_chart_data, chart_type="bubble", canvas_height=500, canvas_width=700)
+st_chartjs(data=bubble_chart_data, chart_type="bubble", canvas_height=500, canvas_width=700)
