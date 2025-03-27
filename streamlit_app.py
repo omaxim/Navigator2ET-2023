@@ -443,5 +443,5 @@ chart = Chart(
 
 # Render the chart as HTML
 chart_html = chart.render()
-
+st.text(chart_html)
 components.html(chart_html)
