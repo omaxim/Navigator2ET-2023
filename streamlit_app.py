@@ -4,6 +4,10 @@ import plotly.express as px
 from io import StringIO
 import plotly.io as pio
 from PIL import Image
+from streamlit_chart_js import st_chartjs
+from pychartjs.charts import Chart
+from pychartjs.datasets import Dataset
+from pychartjs.enums import ChartType
 
 st.set_page_config(
     page_title="Mapa Příležitostí 2023",
