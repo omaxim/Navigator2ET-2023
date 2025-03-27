@@ -456,7 +456,6 @@ data_json = json.dumps(
         }, axis=1
     ).tolist()
 )
-st.json(data_json)
 
 # Convert DataFrame to a JSON-compatible list
 data_json = json.dumps(
