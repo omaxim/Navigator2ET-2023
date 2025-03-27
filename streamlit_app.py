@@ -428,28 +428,18 @@ st.download_button(
     mime="text/html"
 )
 
-# Data for a Bubble Chart
-bubble_chart_data = {
-    "datasets": [
-        {
-            "label": "Dataset 1",
-            "data": [
-                {"x": 20, "y": 30, "r": 15},
-                {"x": 40, "y": 10, "r": 10},
-                {"x": 25, "y": 25, "r": 20},
-            ],
-            "backgroundColor": "rgba(255, 99, 132, 0.6)"
-        },
-        {
-            "label": "Dataset 2",
-            "data": [
-                {"x": 30, "y": 20, "r": 10},
-                {"x": 20, "y": 30, "r": 20},
-                {"x": 15, "y": 40, "r": 25},
-            ],
-            "backgroundColor": "rgba(54, 162, 235, 0.6)"
-        }
-    ]
-}
+# Transform data into Chart.js format
+datasets = []
+for group, group_df in filtered_df.groupby(color):
+    dataset = {
+        "label": group,
+        "data": [
+            {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]} for _, row in group_df.iterrows()
+        ],
+        "backgroundColor": color_discrete_map.get(group, "rgba(0, 0, 0, 0.6)")
+    }
+    datasets.append(dataset)
+bubble_chart_data = {"datasets": datasets}
+
 
 st_chartjs(data=bubble_chart_data, chart_type="bubble", canvas_height=500, canvas_width=700)
