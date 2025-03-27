@@ -529,4 +529,4 @@ chart_js = f"""
 """
 
 # Render the chart in Streamlit
-components.html(chart_js, height=400)
+components.html(chart_js, height=800)
