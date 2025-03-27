@@ -449,7 +449,7 @@ chart = Chart(
 
 
 bubble_chart_data = {
-    "datasets": [dataset],
+    "datasets": [dataset.to_dict()],
     "labels": list(filtered_df["Název"])
 }
 
