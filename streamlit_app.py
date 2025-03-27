@@ -436,7 +436,7 @@ dataset = Dataset(
 )
 
 chart = Chart(
-    chart_type=ChartType.LINE,
+    chart_type=ChartType.BUBBLE,
     datasets=[dataset],
     labels=["January", "February", "March", "April", "May"]
 )
