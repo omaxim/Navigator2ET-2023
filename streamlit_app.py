@@ -456,6 +456,7 @@ data_json = json.dumps(
         }, axis=1
     ).tolist()
 )
+st.json(data_json)
 
 # Convert colors to JSON
 background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
