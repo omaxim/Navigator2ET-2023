@@ -42,6 +42,7 @@ color_discrete_map = {
     '2. Circularity': '#000000',
     'C01a. Zacházení s odpadními vodami': '#000000',
     'A06b. Distribuce a přenos paliv': '#000000',
+    'Trubky': '#000000',
 
     'A02c. Cyklistika a jednostopá': '#808080',
     'A03a. Snižování energetické náročnosti budov': '#94FFB5',
