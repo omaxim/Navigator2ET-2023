@@ -444,5 +444,7 @@ chart = Chart(
 # Render the chart as HTML
 chart_html = chart.render()
 st.text(chart_html)
-components.html("""<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>""")
-components.html(chart_html,height=300)
+components.html(f"""
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {chart_html}
+""", height=300)
