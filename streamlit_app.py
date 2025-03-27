@@ -478,6 +478,6 @@ chart_js = f"""
     }});
 </script>
 """
-
+st.text(chart_js)
 # Render the chart in Streamlit using components.html()
 components.html(chart_js, height=400)
