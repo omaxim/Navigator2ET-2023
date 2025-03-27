@@ -427,10 +427,11 @@ st.download_button(
     file_name = "plot.html",
     mime="text/html"
 )
+
 if HS_select != []:
     # Transform data into Chart.js format
     datasets = []
-    for group, group_df in filtered_df.groupby('Název'):
+    for group, group_df in filtered_df[filtered_df['HS_Lookup'].isin(HS_select)].groupby('Název'):
         dataset = {
             "label": group,
             "data": [
