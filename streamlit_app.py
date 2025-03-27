@@ -431,11 +431,12 @@ st.download_button(
 if HS_select != []:
     # Transform data into Chart.js format
     datasets = []
-    for group, group_df in filtered_df[filtered_df['HS_Lookup'].isin(HS_select)].groupby('Název'):
+    subsetdf=filtered_df[filtered_df['HS_Lookup'].isin(HS_select)]
+    for group, group_df in subsetdf.groupby('Název'):
         dataset = {
             "label": group,
             "data": [
-                {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]} for _, row in group_df.iterrows()
+                {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]/subsetdf[markersize].max} for _, row in group_df.iterrows()
             ],
             "backgroundColor": color_discrete_map.get(group)
         }
