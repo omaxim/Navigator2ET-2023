@@ -474,7 +474,7 @@ chart_js = f"""
                     callbacks: {{
                         label: function(context) {{
                             let data = context.raw;
-                            let tooltipText = `X: ${data.x}, Y: ${data.y}, Size: ${data.r}`;
+                            let tooltipText = `X: ${data_json.x}, Y: ${data_json.y}, Size: ${data_json.r}`;
 
                             // Ensure meta exists before accessing properties
                             if (data.meta) {{
