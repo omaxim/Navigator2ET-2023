@@ -427,24 +427,34 @@ st.download_button(
     file_name = "plot.html",
     mime="text/html"
 )
+# Group by a category if needed (e.g., color)
+group_col = color if color else "default_group"
+filtered_df[group_col] = filtered_df[group_col].astype(str)  # Ensure it's a string for grouping
 
-bubble_data = [
-    {"x": row[x_axis], "y": row[y_axis], "r": row[markersize] / 1000} 
-    for _, row in filtered_df.iterrows()
+# Define color mapping for groups
+color_palette = [
+    "rgba(255, 99, 132, 0.6)", "rgba(54, 162, 235, 0.6)", "rgba(255, 206, 86, 0.6)",
+    "rgba(75, 192, 192, 0.6)", "rgba(153, 102, 255, 0.6)"
 ]
+group_colors = {group: color_palette[i % len(color_palette)] for i, group in enumerate(filtered_df[group_col].unique())}
 
-dataset = Dataset(
-    label="Bubble Data",
-    data=bubble_data,
-    backgroundColor="rgba(75, 192, 192, 0.2)",
-    borderColor="rgba(75, 192, 192, 1)",
-    borderWidth=1,
-)
+# Build datasets dynamically
+datasets = []
+for group, df_group in filtered_df.groupby(group_col):
+    dataset = {
+        "label": group,
+        "data": [
+            {"x": row[x_axis], "y": row[y_axis], "r": row[markersize] / 1000000}  # Adjust bubble size
+            for _, row in df_group.iterrows()
+        ],
+        "backgroundColor": group_colors[group]
+    }
+    datasets.append(dataset)
 
-bubble_chart_data = {
-    "datasets": [dataset],
-    "labels": list(filtered_df["Název"])
-}
+# Construct final bubble chart data
+bubble_chart_data = {"datasets": datasets}
+
+# Display Chart
 st_chartjs(
     data=bubble_chart_data,
     chart_type="bubble",
