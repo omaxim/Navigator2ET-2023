@@ -5,6 +5,7 @@ from io import StringIO
 import plotly.io as pio
 from PIL import Image
 import json
+import itertools
 
 import streamlit.components.v1 as components
 
@@ -43,6 +44,7 @@ color_discrete_map = {
     'C01a. Zacházení s odpadními vodami': '#000000',
     'A06b. Distribuce a přenos paliv': '#000000',
     'Trubky': '#000000',
+    'Proteiny':'#000000',
 
     'A02c. Cyklistika a jednostopá': '#808080',
     'A03a. Snižování energetické náročnosti budov': '#94FFB5',
@@ -447,21 +449,33 @@ if max_size == min_size:
 else:
     filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size) * 50
 
+
+fallback_colors = [
+    "#E63946", "#F4A261", "#2A9D8F", "#264653", "#8A5AAB", "#D67D3E", "#1D3557"
+]  # Example palette (you can use more)
+
+color_cycle = itertools.cycle(fallback_colors)  # Cycles through colors
+
 # Group data by color category
 grouped_data = {}
 for _, row in filtered_df.iterrows():
     color_category = row[color]
+
+    # Use mapped color or fallback if missing
+    assigned_color = color_discrete_map.get(color_category, next(color_cycle))
+
     data_point = {
         "x": row[x_axis],
         "y": row[y_axis],
-        "r": row["scaled_size"],  # Use normalized size
+        "r": row["scaled_size"],
         "meta": {key: row[key] for key in hover_data}
     }
     
     if color_category not in grouped_data:
-        grouped_data[color_category] = {"data": [], "color": color_discrete_map[color_category]}
+        grouped_data[color_category] = {"data": [], "color": assigned_color}
     
     grouped_data[color_category]["data"].append(data_point)
+
 
 # Convert grouped data into Chart.js dataset format
 datasets = [
