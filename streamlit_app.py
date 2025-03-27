@@ -482,7 +482,7 @@ y_label = json.dumps(y_axis)
 
 # Generate the JavaScript chart code
 chart_js = f"""
-<div style="width:100%; height:400px;">
+<div style="width:100%; height:700px;">
     <canvas id="myBubbleChart"></canvas>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
