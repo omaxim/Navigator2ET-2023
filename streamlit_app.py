@@ -451,7 +451,7 @@ chart_js = f"""
             datasets: [
                 {{
                     label: 'Bubble Chart',
-                    data: {filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': {hover_data['tooltip_col1']: row['tooltip_col1'], hover_data['tooltip_col2']: row['tooltip_col2']}}, axis=1).tolist()},
+                    data: {filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': {key: row[key] for key in hover_data.keys()}}, axis=1).tolist()},
                     backgroundColor: {filtered_df[color].map(color_discrete_map).tolist()},
                     borderColor: {filtered_df[color].map(color_discrete_map).tolist()},
                     borderWidth: 1,
@@ -467,7 +467,9 @@ chart_js = f"""
                     callbacks: {{
                         label: function(context) {{
                             let data = context.raw;
-                            return 'X: ' + data.x + ', Y: ' + data.y + ', Size: ' + data.r + ', ' + data.meta.{hover_data['tooltip_col1']} + ': ' + data.meta.{hover_data['tooltip_col1']} + ', ' + data.meta.{hover_data['tooltip_col2']} + ': ' + data.meta.{hover_data['tooltip_col2']};
+                            let tooltipText = 'X: ' + data.x + ', Y: ' + data.y + ', Size: ' + data.r;
+                            {', '.join([f"tooltipText += ', {hover_data[key]}: ' + data.meta['{key}']" for key in hover_data])}
+                            return tooltipText;
                         }}
                     }}
                 }}
@@ -476,3 +478,6 @@ chart_js = f"""
     }});
 </script>
 """
+
+# Render the chart in Streamlit using components.html()
+components.html(chart_js, height=400)
