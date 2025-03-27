@@ -37,6 +37,7 @@ color_discrete_map = {
     'D01c. Nové zdroje potravin': '#000000',
     'D01. Adaptace na dlouhodobé změny': '#000000',
     'C05. Kapaliny a plyny': '#000000',
+    'D02. Živelné pohromy': '#000000',
 
     'A02c. Cyklistika a jednostopá': '#808080',
     'A03a. Snižování energetické náročnosti budov': '#94FFB5',
