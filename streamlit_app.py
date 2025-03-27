@@ -427,7 +427,6 @@ st.download_button(
     file_name = "plot.html",
     mime="text/html"
 )
-st.text(hover_data)
 # Transform data into Chart.js format
 datasets = []
 for group, group_df in filtered_df.groupby(color):
@@ -438,14 +437,25 @@ for group, group_df in filtered_df.groupby(color):
                 "x": row[x_axis], 
                 "y": row[y_axis], 
                 "r": row[markersize],
-                "tooltip": {key: row[key] for key in hover_data}  # Include hover data
+                "hoverInfo": row[hover_data]  # Store hover data
             } for _, row in group_df.iterrows()
         ],
         "backgroundColor": color_discrete_map.get(group, "rgba(0, 0, 0, 0.6)")
     }
     datasets.append(dataset)
 
-bubble_chart_data = {"datasets": datasets}
+bubble_chart_data = {
+    "datasets": datasets,
+    "options": {
+        "plugins": {
+            "tooltip": {
+                "callbacks": {
+                    "label": "function(context) { return context.raw.hoverInfo; }"
+                }
+            }
+        }
+    }
+}
 
 
 st_chartjs(data=bubble_chart_data, chart_type="bubble", canvas_height=500, canvas_width=700)
