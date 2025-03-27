@@ -429,8 +429,14 @@ st.download_button(
 )
 dataset = Dataset(
     label="Sales Data",
-    data=[10, 20, 30, 40, 50],
-    backgroundColor="rgba(75, 192, 192, 0.2)",
+    data=[
+        {"x": 10, "y": 20, "r": 15},
+        {"x": 30, "y": 40, "r": 10},
+        {"x": 50, "y": 25, "r": 20},
+        {"x": 20, "y": 35, "r": 12},
+        {"x": 40, "y": 50, "r": 18},
+    ],
+    backgroundColor="rgba(75, 192, 192, 0.5)",
     borderColor="rgba(75, 192, 192, 1)",
     borderWidth=1,
 )
@@ -438,7 +444,18 @@ dataset = Dataset(
 chart = Chart(
     chart_type=ChartType.BUBBLE,
     datasets=[dataset],
-    labels=["January", "February", "March", "April", "May"]
+    labels=[],  # Bubble charts don't need labels like bar charts
+    options={
+        "responsive": True,
+        "maintainAspectRatio": False,
+        "plugins": {
+            "tooltip": {
+                "callbacks": {
+                    "label": "function(context) { return 'X: ' + context.raw.x + ', Y: ' + context.raw.y + ', Size: ' + context.raw.r; }"
+                }
+            }
+        }
+    }
 )
 
 # Render the chart as HTML
