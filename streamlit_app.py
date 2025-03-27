@@ -443,7 +443,8 @@ dataset = Dataset(
 
 chart = Chart(
     chart_type=ChartType.BUBBLE,
-    datasets=[dataset]
+    datasets=[dataset],
+    labels=list(filtered_df["Název"])
 )
 
 
@@ -453,7 +454,7 @@ bubble_chart_data = {
 }
 
 st_chartjs(
-    data=bubble_chart_data,
+    data=chart,
     chart_type="bubble",
     title="Complex Bubble Chart",
     legend_position="bottom"
