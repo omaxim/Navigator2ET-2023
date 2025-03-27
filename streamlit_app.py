@@ -39,6 +39,7 @@ color_discrete_map = {
     'C05. Kapaliny a plyny': '#000000',
     'D02. Živelné pohromy': '#000000',
     'C01. Voda': '#000000',
+    '2. Circularity': '#000000',
 
     'A02c. Cyklistika a jednostopá': '#808080',
     'A03a. Snižování energetické náročnosti budov': '#94FFB5',
