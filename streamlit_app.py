@@ -474,4 +474,4 @@ chart_html = chart.render()
 components.html(f"""
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {chart_html}
-""", height=300)
+""", height=600)
