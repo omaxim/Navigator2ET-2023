@@ -436,7 +436,7 @@ if HS_select != []:
         dataset = {
             "label": group,
             "data": [
-                {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]/1000000} for _, row in group_df.iterrows()
+                {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]} for _, row in group_df.iterrows()
             ],
             "backgroundColor": color_discrete_map.get(group)
         }
