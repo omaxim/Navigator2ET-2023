@@ -485,9 +485,37 @@ data_json = json.dumps(
     ).tolist()
 )
 
-# Convert colors to JSON
-background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
-border_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
+# Group data by color category
+grouped_data = {}
+for _, row in filtered_df.iterrows():
+    color_category = row[color]
+    data_point = {
+        "x": row[x_axis],
+        "y": row[y_axis],
+        "r": row[markersize],
+        "meta": {key: row[key] for key in hover_data}  # Store all hover info in meta
+    }
+    
+    if color_category not in grouped_data:
+        grouped_data[color_category] = {"data": [], "color": color_discrete_map[color_category]}
+    
+    grouped_data[color_category]["data"].append(data_point)
+
+# Convert grouped data into Chart.js dataset format
+datasets = [
+    {
+        "label": category,
+        "data": group_info["data"],
+        "backgroundColor": group_info["color"],
+        "borderColor": group_info["color"],
+        "borderWidth": 1,
+        "hoverBackgroundColor": "rgba(255, 99, 132, 0.8)"
+    }
+    for category, group_info in grouped_data.items()
+]
+
+# Convert datasets to JSON
+datasets_json = json.dumps(datasets)
 
 # Generate the JavaScript chart code
 chart_js = f"""
@@ -500,16 +528,7 @@ chart_js = f"""
     var myBubbleChart = new Chart(ctx, {{
         type: 'bubble',
         data: {{
-            datasets: [
-                {{
-                    label: 'Bubble Chart',
-                    data: {data_json}, 
-                    backgroundColor: {background_colors},
-                    borderColor: {border_colors},
-                    borderWidth: 1,
-                    hoverBackgroundColor: 'rgba(255, 99, 132, 0.8)',
-                }}
-            ]
+            datasets: {datasets_json}
         }},
         options: {{
             responsive: true,
