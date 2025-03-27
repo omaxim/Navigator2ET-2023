@@ -427,7 +427,7 @@ st.download_button(
     file_name = "plot.html",
     mime="text/html"
 )
-
+st.text(hover_data)
 # Transform data into Chart.js format
 datasets = []
 for group, group_df in filtered_df.groupby(color):
