@@ -7,6 +7,9 @@ from PIL import Image
 from pychartjs.charts import Chart
 from pychartjs.datasets import Dataset
 from pychartjs.enums import ChartType
+from pychartjs.options import ChartOptions
+from pychartjs.plugins import Plugin
+
 import streamlit.components.v1 as components
 
 st.set_page_config(
@@ -427,6 +430,23 @@ st.download_button(
     file_name = "plot.html",
     mime="text/html"
 )
+
+# Ensure options are wrapped in a ChartOptions object
+chart_options = ChartOptions(
+    responsive=True,
+    maintainAspectRatio=False,
+    plugins=[
+        Plugin(
+            plugin_name="tooltip",
+            options={
+                "callbacks": {
+                    "label": "function(context) { return 'X: ' + context.raw.x + ', Y: ' + context.raw.y + ', Size: ' + context.raw.r; }"
+                }
+            }
+        )
+    ]
+)
+
 dataset = Dataset(
     label="Sales Data",
     data=[
@@ -444,18 +464,8 @@ dataset = Dataset(
 chart = Chart(
     chart_type=ChartType.BUBBLE,
     datasets=[dataset],
-    labels=[],  # Bubble charts don't need labels like bar charts
-    options={
-        "responsive": True,
-        "maintainAspectRatio": False,
-        "plugins": {
-            "tooltip": {
-                "callbacks": {
-                    "label": "function(context) { return 'X: ' + context.raw.x + ', Y: ' + context.raw.y + ', Size: ' + context.raw.r; }"
-                }
-            }
-        }
-    }
+    labels=[],  # Bubble charts don't need labels
+    options=chart_options  # Pass the correct object
 )
 
 # Render the chart as HTML
