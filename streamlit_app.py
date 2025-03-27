@@ -428,6 +428,22 @@ st.download_button(
 )
 
 
+# Convert DataFrame to a JSON-compatible list
+data_json = json.dumps(
+    filtered_df.apply(
+        lambda row: {
+            "x": row[x_axis],
+            "y": row[y_axis],
+            "r": row[markersize],
+            "meta": {key: row[key] for key in hover_data}  # Store additional hover info
+        }, axis=1
+    ).tolist()
+)
+
+# Convert colors to JSON
+background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
+border_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
+
 # Generate the JavaScript chart code
 chart_js = f"""
 <div style="width:100%; height:400px;">
@@ -442,9 +458,9 @@ chart_js = f"""
             datasets: [
                 {{
                     label: 'Bubble Chart',
-                    data: {json.dumps(filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': {key: row[key] for key in hover_data}}, axis=1).tolist())},
-                    backgroundColor: {json.dumps(filtered_df[color].map(color_discrete_map).tolist())},
-                    borderColor: {json.dumps(filtered_df[color].map(color_discrete_map).tolist())},
+                    data: {data_json}, 
+                    backgroundColor: {background_colors},
+                    borderColor: {border_colors},
                     borderWidth: 1,
                     hoverBackgroundColor: 'rgba(255, 99, 132, 0.8)',
                 }}
@@ -459,7 +475,12 @@ chart_js = f"""
                         label: function(context) {{
                             let data = context.raw;
                             let tooltipText = `X: ${data.x}, Y: ${data.y}, Size: ${data.r}`;
-                            {''.join([f'tooltipText += `, {hover_data[key]}: ${data.meta["{key}"]}`;' for key in hover_data])}
+
+                            // Ensure meta exists before accessing properties
+                            if (data.meta) {{
+                                {''.join([f'tooltipText += `, {hover_data[key]}: ${data.meta["{key}"]}`;' for key in hover_data])}
+                            }}
+
                             return tooltipText;
                         }}
                     }}
