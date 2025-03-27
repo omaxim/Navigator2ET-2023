@@ -451,7 +451,7 @@ chart_js = f"""
             datasets: [
                 {{
                     label: 'Bubble Chart',
-                    data: {filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': {key: row[key] for key in hover_data.keys()}}, axis=1).tolist()},
+                    data: {filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': row['Název']}, axis=1).tolist()},
                     backgroundColor: {filtered_df[color].map(color_discrete_map).tolist()},
                     borderColor: {filtered_df[color].map(color_discrete_map).tolist()},
                     borderWidth: 1,
