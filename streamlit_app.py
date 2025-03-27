@@ -428,22 +428,7 @@ st.download_button(
     mime="text/html"
 )
 
-bubble_data = [
-    {"x": row[x_axis], "y": row[y_axis], "r": row[markersize] / 1000} 
-    for _, row in filtered_df.iterrows()
-]
-
-dataset = Dataset(
-    label="Bubble Data",
-    data=       {{"x": 20, "y": 30, "r": 15},
-                {"x": 40, "y": 10, "r": 10},
-                {"x": 25, "y": 25, "r": 20}},
-    backgroundColor="rgba(75, 192, 192, 0.2)",
-    borderColor="rgba(75, 192, 192, 1)",
-    borderWidth=1,
-)
-
-
+# Data for a Bubble Chart
 bubble_chart_data = {
     "datasets": [
         {
@@ -466,9 +451,5 @@ bubble_chart_data = {
         }
     ]
 }
-st_chartjs(
-    data=bubble_chart_data,
-    chart_type="bubble",
-    title="Complex Bubble Chart",
-    legend_position="bottom"
-)
+
+st_chartjs(data=bubble_chart_data, chart_type="bubble", canvas_height=500, canvas_width=700)
