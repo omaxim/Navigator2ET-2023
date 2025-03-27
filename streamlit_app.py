@@ -432,7 +432,7 @@ st.download_button(
 datasets = []
 for group, group_df in filtered_df.groupby(color):
     dataset = {
-        "label": group,
+        "label": group_df['HS_ID'],
         "data": [
             {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]} for _, row in group_df.iterrows()
         ],
