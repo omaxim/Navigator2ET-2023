@@ -441,6 +441,12 @@ dataset = Dataset(
     borderWidth=1,
 )
 
+chart = Chart(
+    chart_type=ChartType.BUBBLE,
+    datasets=[dataset]
+)
+
+
 bubble_chart_data = {
     "datasets": [dataset],
     "labels": list(filtered_df["Název"])
