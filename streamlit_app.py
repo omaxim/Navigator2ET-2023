@@ -431,65 +431,48 @@ st.download_button(
     mime="text/html"
 )
 
-# Bubble dataset with extra info for tooltips
-dataset = Dataset(
-    label="Sales Data",
-    data=[
-        {"x": 10, "y": 20, "r": 15, "meta": "Category A"},
-        {"x": 30, "y": 40, "r": 10, "meta": "Category B"},
-        {"x": 50, "y": 25, "r": 20, "meta": "Category C"},
-        {"x": 20, "y": 35, "r": 12, "meta": "Category D"},
-        {"x": 40, "y": 50, "r": 18, "meta": "Category E"},
-    ],
-    backgroundColor="rgba(75, 192, 192, 0.5)",
-    borderColor="rgba(75, 192, 192, 1)",
-    borderWidth=1,
-    hoverBackgroundColor="rgba(255, 99, 132, 0.8)",  # Prevents flickering
-)
 
-# Chart.js JavaScript code
-chart_js = """
+# Normalize bubble sizes
+min_size = filtered_df[markersize].min()
+max_size = filtered_df[markersize].max()
+normalized_sizes = 10 + (filtered_df[markersize] - min_size) / (max_size - min_size) * (40 - 10)  # Normalized between 10 and 40
+
+# Generate the JavaScript chart code
+chart_js = f"""
 <div style="width:100%; height:400px;">
     <canvas id="myBubbleChart"></canvas>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     var ctx = document.getElementById('myBubbleChart').getContext('2d');
-    var myBubbleChart = new Chart(ctx, {
+    var myBubbleChart = new Chart(ctx, {{
         type: 'bubble',
-        data: {
-            datasets: [{
-                label: 'Sales Data',
-                data: [
-                    {x: 10, y: 20, r: 15, meta: 'Category A'},
-                    {x: 30, y: 40, r: 10, meta: 'Category B'},
-                    {x: 50, y: 25, r: 20, meta: 'Category C'},
-                    {x: 20, y: 35, r: 12, meta: 'Category D'},
-                    {x: 40, y: 50, r: 18, meta: 'Category E'}
-                ],
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                hoverBackgroundColor: 'rgba(255, 99, 132, 0.8)'
-            }]
-        },
-        options: {
+        data: {{
+            datasets: [
+                {{
+                    label: 'Bubble Chart',
+                    data: {filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': {hover_data['tooltip_col1']: row['tooltip_col1'], hover_data['tooltip_col2']: row['tooltip_col2']}}, axis=1).tolist()},
+                    backgroundColor: {filtered_df[color].map(color_discrete_map).tolist()},
+                    borderColor: {filtered_df[color].map(color_discrete_map).tolist()},
+                    borderWidth: 1,
+                    hoverBackgroundColor: 'rgba(255, 99, 132, 0.8)',
+                }}
+            ]
+        }},
+        options: {{
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
+            plugins: {{
+                tooltip: {{
+                    callbacks: {{
+                        label: function(context) {{
                             let data = context.raw;
-                            return 'X: ' + data.x + ', Y: ' + data.y + ', Size: ' + data.r + ', Info: ' + data.meta;
-                        }
-                    }
-                }
-            }
-        }
-    });
+                            return 'X: ' + data.x + ', Y: ' + data.y + ', Size: ' + data.r + ', ' + data.meta.{hover_data['tooltip_col1']} + ': ' + data.meta.{hover_data['tooltip_col1']} + ', ' + data.meta.{hover_data['tooltip_col2']} + ': ' + data.meta.{hover_data['tooltip_col2']};
+                        }}
+                    }}
+                }}
+            }},
+        }}
+    }});
 </script>
 """
-
-# Render the chart in Streamlit using components.html()
-components.html(chart_js, height=400)
