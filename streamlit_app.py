@@ -458,6 +458,18 @@ data_json = json.dumps(
 )
 st.json(data_json)
 
+# Convert DataFrame to a JSON-compatible list
+data_json = json.dumps(
+    filtered_df.apply(
+        lambda row: {
+            "x": row[x_axis],
+            "y": row[y_axis],
+            "r": row[markersize],
+            "meta": {key: row[key] for key in hover_data}  # Store all hover info in meta
+        }, axis=1
+    ).tolist()
+)
+
 # Convert colors to JSON
 background_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
 border_colors = json.dumps(filtered_df[color].map(color_discrete_map).tolist())
@@ -491,15 +503,11 @@ chart_js = f"""
                 tooltip: {{
                     callbacks: {{
                         label: function(context) {{
-                            let data = context.dataset.data[context.dataIndex]; // Correct way to access data
-                            let tooltipText = `X: $${{data.meta}}, Y: $${{data.y}}, Size: $${{data.r}}`;
-
-                            // Ensure meta exists before accessing properties
-                            if (data.meta) {{
-                                {''.join([f'tooltipText += `, {hover_data[key]}: $${{data.meta["{key}"]}}`;' for key in hover_data])}
-                            }}
-
-                            return tooltipText;
+                            let data = context.dataset.data[context.dataIndex]; 
+                            if (!data.meta) return ''; // Safety check
+                            
+                            // Convert meta object to key-value pairs
+                            return Object.entries(data.meta).map(([key, value]) => `${{key}}: ${{value}}`).join('\\n');
                         }}
                     }}
                 }}
