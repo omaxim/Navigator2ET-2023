@@ -462,13 +462,15 @@ datasets = [
         "backgroundColor": group_info["color"],
         "borderColor": group_info["color"],
         "borderWidth": 1,
-        "hoverBackgroundColor": "rgba(255, 99, 132, 0.8)"
+        "hoverRadius": 10,  # Increase size on hover
     }
     for category, group_info in grouped_data.items()
 ]
 
 # Convert datasets to JSON
 datasets_json = json.dumps(datasets)
+x_label = json.dumps(x_axis)  # Convert to JSON for safe JS use
+y_label = json.dumps(y_axis)
 
 # Generate the JavaScript chart code
 chart_js = f"""
@@ -486,6 +488,20 @@ chart_js = f"""
         options: {{
             responsive: true,
             maintainAspectRatio: false,
+            scales: {{
+                x: {{
+                    title: {{
+                        display: true,
+                        text: {x_label}  // X-axis label
+                    }}
+                }},
+                y: {{
+                    title: {{
+                        display: true,
+                        text: {y_label}  // Y-axis label
+                    }}
+                }}
+            }},
             plugins: {{
                 tooltip: {{
                     callbacks: {{
