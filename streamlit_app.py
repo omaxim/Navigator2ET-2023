@@ -428,3 +428,26 @@ st.download_button(
     mime="text/html"
 )
 
+bubble_data = [
+    {"x": row[x_axis], "y": row[y_axis], "r": row[markersize] / 1000} 
+    for _, row in filtered_df.iterrows()
+]
+
+dataset = Dataset(
+    label="Bubble Data",
+    data=bubble_data,
+    backgroundColor="rgba(75, 192, 192, 0.2)",
+    borderColor="rgba(75, 192, 192, 1)",
+    borderWidth=1,
+)
+
+bubble_chart_data = {
+    "datasets": [dataset],
+    "labels": list(filtered_df["Název"])
+}
+st_chartjs(
+    data=bubble_chart_data,
+    chart_type="bubble",
+    title="Complex Bubble Chart",
+    legend_position="bottom"
+)
