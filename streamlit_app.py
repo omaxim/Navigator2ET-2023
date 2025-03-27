@@ -439,6 +439,12 @@ st.download_button(
     mime="text/html"
 )
 
+
+
+
+
+
+
 # Min-Max scaling for markersize (normalize to 0-100)
 min_size = filtered_df[markersize].min()
 max_size = filtered_df[markersize].max()
@@ -456,6 +462,18 @@ fallback_colors = [
 
 color_cycle = itertools.cycle(fallback_colors)  # Cycles through colors
 
+# Function to format values based on the hover_data rules
+def format_hover_data(key, value):
+    if key in no_decimal:
+        return "{:,.0f}".format(value)  # No decimals, thousands separator
+    elif key in two_sigfig:
+        return "{:.2f}".format(value)  # 2 decimal places
+    elif key in percentage:
+        return "{:.1f}%".format(value * 100)  # Convert to percentage
+    elif key in texthover:
+        return str(value)  # Just return the text as is
+    else:
+        return value  # No special formatting
 # Group data by color category
 grouped_data = {}
 for _, row in filtered_df.iterrows():
@@ -468,7 +486,7 @@ for _, row in filtered_df.iterrows():
         "x": row[x_axis],
         "y": row[y_axis],
         "r": row["scaled_size"],
-        "meta": {key: row[key] for key in hover_data}
+        "meta": {key: format_hover_data(key, row[key]) for key in hover_data if hover_data[key] is not False}
     }
     
     if color_category not in grouped_data:
