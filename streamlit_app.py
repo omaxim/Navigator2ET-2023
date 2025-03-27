@@ -436,7 +436,7 @@ for group, group_df in filtered_df.groupby(color):
         "data": [
             {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]} for _, row in group_df.iterrows()
         ],
-        "backgroundColor": color_discrete_map.get(group, "rgba(0, 0, 0, 0.6)")
+        "backgroundColor": color_discrete_map.get(group)
     }
     datasets.append(dataset)
 bubble_chart_data = {"datasets": datasets}
