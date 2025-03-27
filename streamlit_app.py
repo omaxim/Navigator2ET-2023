@@ -4,11 +4,7 @@ import plotly.express as px
 from io import StringIO
 import plotly.io as pio
 from PIL import Image
-from pychartjs.charts import Chart
-from pychartjs.datasets import Dataset
-from pychartjs.enums import ChartType
-from pychartjs.options import ChartOptions
-from pychartjs.plugins import Plugin
+import json
 
 import streamlit.components.v1 as components
 
@@ -432,11 +428,6 @@ st.download_button(
 )
 
 
-# Normalize bubble sizes
-min_size = filtered_df[markersize].min()
-max_size = filtered_df[markersize].max()
-normalized_sizes = 10 + (filtered_df[markersize] - min_size) / (max_size - min_size) * (40 - 10)  # Normalized between 10 and 40
-
 # Generate the JavaScript chart code
 chart_js = f"""
 <div style="width:100%; height:400px;">
@@ -451,9 +442,9 @@ chart_js = f"""
             datasets: [
                 {{
                     label: 'Bubble Chart',
-                    data: {filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': row['Název']}, axis=1).tolist()},
-                    backgroundColor: {filtered_df[color].map(color_discrete_map).tolist()},
-                    borderColor: {filtered_df[color].map(color_discrete_map).tolist()},
+                    data: {json.dumps(filtered_df.apply(lambda row: {'x': row[x_axis], 'y': row[y_axis], 'r': row[markersize], 'meta': {key: row[key] for key in hover_data}}, axis=1).tolist())},
+                    backgroundColor: {json.dumps(filtered_df[color].map(color_discrete_map).tolist())},
+                    borderColor: {json.dumps(filtered_df[color].map(color_discrete_map).tolist())},
                     borderWidth: 1,
                     hoverBackgroundColor: 'rgba(255, 99, 132, 0.8)',
                 }}
@@ -467,8 +458,8 @@ chart_js = f"""
                     callbacks: {{
                         label: function(context) {{
                             let data = context.raw;
-                            let tooltipText = 'X: ' + data.x + ', Y: ' + data.y + ', Size: ' + data.r;
-                            {', '.join([f"tooltipText += ', {hover_data[key]}: ' + data.meta['{key}']" for key in hover_data])}
+                            let tooltipText = `X: ${data.x}, Y: ${data.y}, Size: ${data.r}`;
+                            {''.join([f'tooltipText += `, {hover_data[key]}: ${data.meta["{key}"]}`;' for key in hover_data])}
                             return tooltipText;
                         }}
                     }}
@@ -478,5 +469,6 @@ chart_js = f"""
     }});
 </script>
 """
-# Render the chart in Streamlit using components.html()
+
+# Render the chart in Streamlit
 components.html(chart_js, height=400)
