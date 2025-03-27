@@ -436,7 +436,7 @@ max_size = filtered_df[markersize].max()
 if max_size == min_size:
     filtered_df["scaled_size"] = 50  # Default all to medium size
 else:
-    filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size) * 100
+    filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size) * 10
 
 # Group data by color category
 grouped_data = {}
