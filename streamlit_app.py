@@ -4,10 +4,10 @@ import plotly.express as px
 from io import StringIO
 import plotly.io as pio
 from PIL import Image
-from streamlit_chartjs.st_chart_component import st_chartjs
 from pychartjs.charts import Chart
 from pychartjs.datasets import Dataset
 from pychartjs.enums import ChartType
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Mapa Příležitostí 2023",
@@ -427,21 +427,21 @@ st.download_button(
     file_name = "plot.html",
     mime="text/html"
 )
+dataset = Dataset(
+    label="Sales Data",
+    data=[10, 20, 30, 40, 50],
+    backgroundColor="rgba(75, 192, 192, 0.2)",
+    borderColor="rgba(75, 192, 192, 1)",
+    borderWidth=1,
+)
 
-if HS_select != []:
-    # Transform data into Chart.js format
-    datasets = []
-    subsetdf=filtered_df[filtered_df['HS_Lookup'].isin(HS_select)]
-    for group, group_df in subsetdf.groupby('Název'):
-        dataset = {
-            "label": group,
-            "data": [
-                {"x": row[x_axis], "y": row[y_axis], "r": row[markersize]} for _, row in group_df.iterrows()
-            ],
-            "backgroundColor": color_discrete_map.get(group)
-        }
-        datasets.append(dataset)
-    bubble_chart_data = {"datasets": datasets}
+chart = Chart(
+    chart_type=ChartType.BUBBLE,
+    datasets=[dataset],
+    labels=["January", "February", "March", "April", "May"]
+)
 
+# Render the chart as HTML
+chart_html = chart.render()
 
-    st_chartjs(data=bubble_chart_data, chart_type="bubble", x_axis_title=x_axis,y_axis_title=y_axis,title="",canvas_height=500, canvas_width=700)
+components.html(chart_html)
