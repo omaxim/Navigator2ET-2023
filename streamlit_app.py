@@ -424,9 +424,13 @@ fig.update_layout(
 
 if plotly_or_chartjs=="Plotly":
     st.plotly_chart(fig)
+    mybuff = StringIO()
+    fig.write_html(mybuff, include_plotlyjs='cdn')
+    html_bytes = mybuff.getvalue().encode()
 else:
     # Render the chart in Streamlit
     components.html(chart_js, height=800)
+    html_bytes=chart_js
 
 col1, col2, col3 = st.columns(3)
 if HS_select == []:
@@ -443,9 +447,8 @@ else:
         st.dataframe(filtered_df[filtered_df['HS_Lookup'].isin(HS_select)])
 
 
-mybuff = StringIO()
-fig.write_html(mybuff, include_plotlyjs='cdn')
-html_bytes = mybuff.getvalue().encode()
+
+
 st.download_button(
     label = "Stáhnout HTML",
     data = html_bytes,
