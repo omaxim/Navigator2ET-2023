@@ -6,6 +6,7 @@ import plotly.io as pio
 from PIL import Image
 import json
 import itertools
+from chartjsbubble import chartjs_plot
 
 import streamlit.components.v1 as components
 
@@ -440,126 +441,6 @@ st.download_button(
 )
 
 
-
-
-
-
-
-# Min-Max scaling for markersize (normalize to 0-100)
-min_size = filtered_df[markersize].min()
-max_size = filtered_df[markersize].max()
-
-# Avoid division by zero in case all values are the same
-if max_size == min_size:
-    filtered_df["scaled_size"] = 2  # Default all to medium size
-else:
-    filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size)  * 30 + 2
-
-
-fallback_colors = [
-    "#E63946", "#F4A261", "#2A9D8F", "#264653", "#8A5AAB", "#D67D3E", "#1D3557"
-]  # Example palette (you can use more)
-
-color_cycle = itertools.cycle(fallback_colors)  # Cycles through colors
-
-# Function to format values based on the hover_data rules
-def format_hover_data(key, value):
-    if key in no_decimal:
-        return "{:,.0f}".format(value)  # No decimals, thousands separator
-    elif key in two_sigfig:
-        return "{:.2f}".format(value)  # 2 decimal places
-    elif key in percentage:
-        return "{:.1f}%".format(value * 100)  # Convert to percentage
-    elif key in texthover:
-        return str(value)  # Just return the text as is
-    else:
-        return value  # No special formatting
-# Group data by color category
-grouped_data = {}
-for _, row in filtered_df.iterrows():
-    color_category = row[color]
-
-    # Use mapped color or fallback if missing
-    assigned_color = color_discrete_map.get(color_category, next(color_cycle))
-
-    data_point = {
-        "x": row[x_axis],
-        "y": row[y_axis],
-        "r": row["scaled_size"],
-        "meta": {key: format_hover_data(key, row[key]) for key in hover_data if hover_data[key] is not False}
-    }
-    
-    if color_category not in grouped_data:
-        grouped_data[color_category] = {"data": [], "color": assigned_color}
-    
-    grouped_data[color_category]["data"].append(data_point)
-
-
-# Convert grouped data into Chart.js dataset format
-datasets = [
-    {
-        "label": category,
-        "data": group_info["data"],
-        "backgroundColor": group_info["color"],
-        "borderColor": group_info["color"],
-        "borderWidth": 1,
-        "hoverRadius": 10,  # Increase size on hover
-    }
-    for category, group_info in grouped_data.items()
-]
-
-# Convert datasets to JSON
-datasets_json = json.dumps(datasets)
-x_label = json.dumps(x_axis)  # Convert to JSON for safe JS use
-y_label = json.dumps(y_axis)
-
-# Generate the JavaScript chart code
-chart_js = f"""
-<div style="width:100%; height:700px;">
-    <canvas id="myBubbleChart"></canvas>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    var ctx = document.getElementById('myBubbleChart').getContext('2d');
-    var myBubbleChart = new Chart(ctx, {{
-        type: 'bubble',
-        data: {{
-            datasets: {datasets_json}
-        }},
-        options: {{
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {{
-                x: {{
-                    title: {{
-                        display: true,
-                        text: {x_label}  // X-axis label
-                    }}
-                }},
-                y: {{
-                    title: {{
-                        display: true,
-                        text: {y_label}  // Y-axis label
-                    }}
-                }}
-            }},
-            plugins: {{
-                tooltip: {{
-                    callbacks: {{
-                        label: function(context) {{
-                            let data = context.dataset.data[context.dataIndex]; 
-                            if (!data.meta) return []; // Return empty array if no meta data
-
-                            // Convert meta object to array of "Key: Value" strings (each in a new line)
-                            return Object.entries(data.meta).map(([key, value]) => `${{key}}: ${{value}}`);
-                        }}
-                    }}
-                }}
-            }},
-        }}
-    }});
-</script>
-"""
-
+chart_js = chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,color_discrete_map,no_decimal,two_sigfig,percentage,texthover)
 # Render the chart in Streamlit
 components.html(chart_js, height=800)
