@@ -3,16 +3,7 @@ import json
 import itertools
 from variable_names import get_hover_formatting, get_color_discrete_map
 def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,year):
-    for key in hover_data:
-        if hover_data[key] is not False:
-            value = format_hover_data(key, row[key])
-            if "<br>" in value:
-                parts = value.split("<br>")
-                for i, part in enumerate(parts):
-                    new_key = f"{key} ({i+1})" if i > 0 else key  # Append (1), (2), etc.
-                    data_point["meta"][new_key] = part
-            else:
-                data_point["meta"][key] = value
+
     # Min-Max scaling for markersize (normalize to 0-100)
     min_size = filtered_df[markersize].min()
     max_size = filtered_df[markersize].max()
@@ -45,6 +36,16 @@ def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,year):
     # Group data by color category
     grouped_data = {}
     for _, row in filtered_df.iterrows():
+        for key in hover_data:
+            if hover_data[key] is not False:
+                value = format_hover_data(key, row[key])
+                if "<br>" in value:
+                    parts = value.split("<br>")
+                    for i, part in enumerate(parts):
+                        new_key = f"{key} ({i+1})" if i > 0 else key  # Append (1), (2), etc.
+                        data_point["meta"][new_key] = part
+                else:
+                    data_point["meta"][key] = value
         color_category = row[color]
 
         # Use mapped color or fallback if missing
