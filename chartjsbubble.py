@@ -29,7 +29,7 @@ def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,year):
         elif key in percentage:
             return "{:.1f}%".format(value * 100)  # Convert to percentage
         elif key in texthover:
-            return str(value).replace("<br>", "\n")  # Convert <br> to \n for JS
+            return str(value).replace("<br>", "")  # Convert <br> to ""
         else:
             return value  # No special formatting
     # Group data by color category
