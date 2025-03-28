@@ -94,7 +94,7 @@ plot_display_names, hover_display_data = get_plot_and_hover_display_names(year_p
 # Sidebar selection boxes using display names
 x_axis      = st.sidebar.selectbox("Vyber osu X:", plot_display_names, index=4)
 y_axis      = st.sidebar.selectbox("Vyber osu Y:", plot_display_names, index=5)
-markersize  = st.sidebar.selectbox("Velikost dle:", plot_display_names, index=9)
+markersize  = st.sidebar.selectbox("Velikost dle:", plot_display_names, index=10)
 
 
 # Apply filters to dataframe
