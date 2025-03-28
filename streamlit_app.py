@@ -3,12 +3,8 @@ import pandas as pd
 import plotly.express as px
 from io import StringIO
 import plotly.io as pio
-from PIL import Image
-import json
-import itertools
 from chartjsbubble import chartjs_plot
 from variable_names import get_color_discrete_map, get_plot_and_hover_display_names, get_hover_data
-
 import streamlit.components.v1 as components
 
 st.set_page_config(
