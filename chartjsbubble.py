@@ -12,7 +12,7 @@ def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,year):
     if max_size == min_size:
         filtered_df["scaled_size"] = 2  # Default all to medium size
     else:
-        filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size)  * 30 + 2
+        filtered_df["scaled_size"] = (filtered_df[markersize].copy() - min_size) / (max_size - min_size)  * 30 + 2
 
     color_discrete_map = get_color_discrete_map()
     fallback_colors = [
