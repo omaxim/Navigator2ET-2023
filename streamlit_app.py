@@ -266,7 +266,7 @@ with col2:
 # Display existing filters using display names
 for i, filter in enumerate(st.session_state.filters):
     filter_col= st.sidebar.selectbox(f"Filtr {i+1}", plot_display_names, key=f"filter_col_{i}")
-    filter_min, filter_max = df[filter_col].min(), df[filter_col].max()
+    filter_min, filter_max = df[filter_col.replace(year_placeholder,year)].min(), df[filter_col.replace(year_placeholder,year)].max()
     filter_range = st.sidebar.slider(f"Filtr {i+1}", float(filter_min), float(filter_max), (float(filter_min), float(filter_max)), key=f"filter_range_{i}")
     st.session_state.filters[i]['column'] = filter_col
     st.session_state.filters[i]['range'] = filter_range
