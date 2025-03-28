@@ -292,14 +292,18 @@ filtered_df = filtered_df.dropna(subset=[x_axis, y_axis, color, markersize])
 
 
 HS_select = st.multiselect("Filtrovat HS6 kódy",filtered_df['HS_Lookup'])
-plotlystyle = st.sidebar.selectbox("Styl grafu:",["plotly_dark","plotly","ggplot2","seaborn","simple_white","none"])
+plotly_or_chartjs = st.sidebar.radio("Plotly nebo Chart.js",["Plotly","Chart.js"],1)
+if plotly_or_chartjs=="Plotly":
+    plotlystyle = st.sidebar.selectbox("Styl grafu:",["plotly_dark","plotly","ggplot2","seaborn","simple_white","none"])
+    pio.templates.default = plotlystyle
+
+
 background_color = st.sidebar.selectbox('Barva pozadí',[None,'#0D1A27','#112841'])
 # Create a button in the sidebar that clears the cache
 if st.sidebar.button('Obnovit Data'):
     load_data.clear()  # This will clear the cache for the load_data function
     st.sidebar.write("Sušenky vyčištěny!")
 debug = st.sidebar.toggle('Debug')
-pio.templates.default = plotlystyle
 # Initialize the hover_data dictionary with default values of False for x, y, and markersize
 #hover_data = {col: True for col in hover_info}
 hover_data = {}
@@ -418,7 +422,12 @@ fig.update_layout(
     paper_bgcolor = background_color          
 )
 
-st.plotly_chart(fig)
+if plotly_or_chartjs=="Plotly":
+    st.plotly_chart(fig)
+else:
+    # Render the chart in Streamlit
+    components.html(chart_js, height=800)
+
 col1, col2, col3 = st.columns(3)
 if HS_select == []:
     col1.metric("Vybraný český export za rok "+year+"", "{:,.0f}".format(sum(filtered_df['CZ Export '+year+' CZK'])/1000000000),'miliard CZK' )
@@ -444,6 +453,3 @@ st.download_button(
     mime="text/html"
 )
 
-
-# Render the chart in Streamlit
-components.html(chart_js, height=800)
