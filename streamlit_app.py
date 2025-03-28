@@ -383,6 +383,8 @@ if HS_select == []:
                      opacity=0.7,
                      size=markersize,
                      size_max=40)
+    chart_js = chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,color_discrete_map,no_decimal,two_sigfig,percentage,texthover)
+
     
 
 else:
@@ -397,6 +399,8 @@ else:
                      size=markersize,
                      size_max=40
                      )
+    chart_js = chartjs_plot(filtered_df[filtered_df['HS_Lookup'].isin(HS_select)],markersize,hover_data,color,x_axis,y_axis,color_discrete_map,no_decimal,two_sigfig,percentage,texthover)
+
 
 fig.update_layout(
     hoverlabel=dict(
@@ -441,6 +445,5 @@ st.download_button(
 )
 
 
-chart_js = chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,color_discrete_map,no_decimal,two_sigfig,percentage,texthover)
 # Render the chart in Streamlit
 components.html(chart_js, height=800)
