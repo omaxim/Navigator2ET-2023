@@ -58,7 +58,7 @@ def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,year):
                 if "<br>" in value:
                     parts = value.split("<br>")
                     for i, part in enumerate(parts):
-                        new_key = f"{key} ({i+1})" if i > 0 else key  # Append (1), (2), etc.
+                        new_key = f"{key} {i+1}" if i > 0 else key  # Append (1), (2), etc.
                         data_point["meta"][new_key] = part
                 else:
                     data_point["meta"][key] = value
