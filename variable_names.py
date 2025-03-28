@@ -116,7 +116,7 @@ def get_plot_and_hover_display_names(year_placeholder):
         'CZ-EU Podíl '+year_placeholder+' %',
         'CZ 2030 Export CZK',
         'CZ Celkový Export 25-30 CZK',
-        'EU 2030 Export',
+        'EU 2030 Export CZK',
         'ubiquity',
         'EU Celkový Export 25-30 CZK',
         'Percentil příbuznosti CZ '+year_placeholder+'',
