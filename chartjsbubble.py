@@ -1,8 +1,8 @@
 import pandas as pd
 import json
 import itertools
-
-def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,color_discrete_map,no_decimal,two_sigfig,percentage,texthover):
+from variable_names import get_hover_formatting, get_color_discrete_map
+def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,year):
     # Min-Max scaling for markersize (normalize to 0-100)
     min_size = filtered_df[markersize].min()
     max_size = filtered_df[markersize].max()
@@ -13,13 +13,13 @@ def chartjs_plot(filtered_df,markersize,hover_data,color,x_axis,y_axis,color_dis
     else:
         filtered_df["scaled_size"] = (filtered_df[markersize] - min_size) / (max_size - min_size)  * 30 + 2
 
-
+    color_discrete_map = get_color_discrete_map()
     fallback_colors = [
         "#E63946", "#F4A261", "#2A9D8F", "#264653", "#8A5AAB", "#D67D3E", "#1D3557"
     ]  # Example palette (you can use more)
 
     color_cycle = itertools.cycle(fallback_colors)  # Cycles through colors
-
+    no_decimal,two_sigfig,percentage,texthover = get_hover_formatting(year)
     # Function to format values based on the hover_data rules
     def format_hover_data(key, value):
         if key in no_decimal:
